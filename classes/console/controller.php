@@ -10,7 +10,7 @@
 class Console_Controller extends Kohana_Controller_Template
 {
 	// Sets the template variable
-	public $template = 'template/console';
+	public $template = 'console/template';
 
 	/**
 	 * Checks for a media file
@@ -61,17 +61,11 @@ class Console_Controller extends Kohana_Controller_Template
 	 */
 	protected function parse( $text )
 	{
+		// Remove the first to lines
 		$log = explode( "\n", $text );
 		$log = array_slice( $log, 2 );
-		$html = '<div class="log">';
 
-		foreach( $log as $entry )
-		{
-			$html .= '<div class="entry">' . $entry . '</div>';
-		}
-
-		$html .= '</div>';
-		return $html;
+		return  View::factory('console/entry')->set('log', $log)->render();
 	}
 
 	/**
@@ -80,55 +74,44 @@ class Console_Controller extends Kohana_Controller_Template
 	 * @param	string	Active file
 	 * @return	string
 	 */
-	protected function build_directory( $active = '' )
+	protected function build_directory( $file )
 	{
-		$active = 'logs/' . $active;
-		$files = array_reverse( Kohana::list_files('logs') );
-		$li = '<li%s><a href="/%s">%s</a></li>';
+		$logs = Kohana::list_files('logs');
 
-		if( $files )
+		if( $logs )
 		{
-			$html = '<div class="directory">';
+			// Create directory array
+			$dir = array();
 
-			foreach( $files as $year => $months )
+			// Get the active file info
+			$active = pathinfo( $file );;
+
+			krsort($logs);
+
+			foreach( $logs as $years => $months )
 			{
-				$html .= '<h2>' . str_replace('logs/', '', $year) .'</h2><div class="year">';
-
-				$months = array_reverse( $months );
+				krsort( $months );
 
 				foreach( $months as $path => $files )
 				{
-					$path = explode('/', $path);
-					$html .= '<div class="month"><h3>' . Console::get_month( $path[2] ) . '</h3>';
-					$html .= '<ul class="files">';
+					krsort($files);
 
-					$files = array_reverse( $files );
-
-					foreach( $files as $name => $log )
+					foreach( $files as $file => $path )
 					{
-						$path = explode('/', $name);
-						$path = array_slice($path, 1);
-						$file_name = explode('.', $path[2]);
-						// Add the LI
-						$html .= sprintf(
-							$li,
-							( $name == $active ) ? ' class="active"' : '',
-							'console/' . implode('/', $path),
-							$file_name[0]
-						);
+						list( $logs, $year, $month, $fn ) = explode( '/', $file );
+						$day = explode('.', $fn);
+						$dir[$year][$month][$day[0]] = str_replace('logs/', '', $file);
 					}
 
-					$html .= '</ul></div>';
 				}
 
-				$html .= '</div>';
 			}
 
-			return $html . '</div>';
+			return View::factory('console/directory')->set('dir', $dir)->set('active', $active)->render();
 		}
 		else
 		{
-			return Kohana::message( 'logviewer', 'not_found' );
+			return Kohana::message( 'console', 'not_found' );
 		}
 	}
 
