@@ -44,13 +44,24 @@ class Console_Controller extends Kohana_Controller_Template
 		if( $file )
 		{
 			$path = pathinfo($file);
-			$content = file_get_contents( Kohana::find_file('logs', $path['dirname'] . '/' . $path['filename'], $path['extension'] ) );
-			return $this->parse( $content );
+			$file = Kohana::find_file('logs', $path['dirname'] . '/' . $path['filename'], $path['extension'] );
+
+			if( $file )
+			{
+				$content = file_get_contents( $file );
+				return $this->parse( $content );
+			}
+			else
+			{
+				return Kohana::message( 'console', 'not_found' );
+			}
+
 		}
 		else
 		{
 			return Kohana::message( 'console', 'directions');
 		}
+
 	}
 
 	/**
@@ -84,7 +95,7 @@ class Console_Controller extends Kohana_Controller_Template
 			$dir = array();
 
 			// Get the active file info
-			$active = pathinfo( $file );;
+			$active = ($file) ? pathinfo( $file ) : NULL;
 
 			krsort($logs);
 
@@ -109,10 +120,7 @@ class Console_Controller extends Kohana_Controller_Template
 
 			return View::factory('console/directory')->set('dir', $dir)->set('active', $active)->render();
 		}
-		else
-		{
-			return Kohana::message( 'console', 'not_found' );
-		}
+
 	}
 
 	/**

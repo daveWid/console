@@ -45,14 +45,14 @@ a:hover {
 }
 
 #two-col #content {
-	width:80%;
+	width:700px;
 	padding-right: 20px;
 	border-right:1px solid #DDD;
 }
 
 #two-col #right {
 	padding-left: 20px;
-	width:20%;
+	width:160px;
 }
 
 #footer .left {
@@ -75,6 +75,8 @@ a:hover {
 .entry {
 	padding:6px;
 	border-bottom: 1px solid #DDD;
+	width:688px;
+	word-wrap:break-word;
 }
 div.entry:hover {
 	background-color:#EEE;

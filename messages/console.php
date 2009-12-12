@@ -5,5 +5,5 @@ return array(
 	'directions' => '<p>Please select a date from the list to the right to view the log</p>',
 
 	// Log files not found
-	'not_found' => '<p>No Log files found!</p>',
+	'not_found' => '<p>The log file was not found.</p>',
 );
