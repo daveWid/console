@@ -14,7 +14,7 @@
 					$li .= ( $active && $year.'/'.$month == $active['dirname'] && $day == $active['filename'] ) ?
 						'<li class="active">' : '<li>' ;
 
-					$li .= '<a href="/console/' . $file . '">' . $day . '</a></li>';
+					$li .= '<a href="'.$base.'console/' . $file . '">' . $day . '</a></li>';
 					echo "\t$li\n";
 				}
 			?>

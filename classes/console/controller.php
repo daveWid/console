@@ -118,7 +118,7 @@ class Console_Controller extends Kohana_Controller_Template
 
 			}
 
-			return View::factory('console/directory')->set('dir', $dir)->set('active', $active)->render();
+			return View::factory('console/directory')->set('dir', $dir)->set('active', $active)->set('base', Kohana::$base_url)->render();
 		}
 
 	}
