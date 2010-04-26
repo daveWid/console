@@ -14,7 +14,8 @@
 					$li .= ( $active && $year.'/'.$month == $active['dirname'] && $day == $active['filename'] ) ?
 						'<li class="active">' : '<li>' ;
 
-					$li .= '<a href="'.$base.'console/' . $file . '">' . $day . '</a></li>';
+					$uri = Request::instance()->uri(array('file' => $file));
+					$li .= HTML::anchor($uri, $day).'</li>';
 					echo "\t$li\n";
 				}
 			?>

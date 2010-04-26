@@ -11,7 +11,7 @@
 <body>
 	<div id="header">
 		<div class="box">
-			<h1><a href="<?php echo Kohana::$base_url; ?>console">Console</a></h1>
+			<h1><?php echo HTML::anchor(Request::instance()->uri(array('file'=>NULL)), 'Console') ?></h1>
 		</div>
 	</div>
 
