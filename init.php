@@ -11,5 +11,6 @@ Route::set('console', 'console(/<file>)', array('file' => '.+'))
 	->defaults(array(
 		'controller' => 'console',
 		'action'     => 'index',
-		'file'      => NULL,
+		'file'       => NULL,
+		'dir'        => 'logs',
 	));

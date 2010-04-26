@@ -12,6 +12,9 @@ class Console_Controller extends Kohana_Controller_Template
 	// Sets the template variable
 	public $template = 'console/template';
 
+	// Log directory
+	private $dir = 'logs';
+
 	/**
 	 * Checks for a media file
 	 */
@@ -24,6 +27,8 @@ class Console_Controller extends Kohana_Controller_Template
 		else
 		{
 			parent::before();
+
+			$this->dir = $this->request->param('dir');
 
 			$view_data = array(
 				'css' => array(
@@ -64,7 +69,7 @@ class Console_Controller extends Kohana_Controller_Template
 		if( $file )
 		{
 			$path = pathinfo($file);
-			$file = Kohana::find_file('logs', $path['dirname'] . DIRECTORY_SEPARATOR . $path['filename'], $path['extension'] );
+			$file = Kohana::find_file($this->dir, $path['dirname'] . DIRECTORY_SEPARATOR . $path['filename'], $path['extension'] );
 
 			if( $file )
 			{
@@ -107,7 +112,7 @@ class Console_Controller extends Kohana_Controller_Template
 	 */
 	protected function build_directory( $file )
 	{
-		$logs = Kohana::list_files('logs');
+		$logs = Kohana::list_files($this->dir);
 
 		if( $logs )
 		{
@@ -131,7 +136,7 @@ class Console_Controller extends Kohana_Controller_Template
 					{
 						list( $logs, $year, $month, $fn ) = explode( DIRECTORY_SEPARATOR, $file );
 						$day = explode('.', $fn);
-						$dir[$year][$month][$day[0]] = str_replace('logs' . DIRECTORY_SEPARATOR, '', $file);
+						$dir[$year][$month][$day[0]] = str_replace($this->dir . DIRECTORY_SEPARATOR, '', $file);
 					}
 
 				}
