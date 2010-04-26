@@ -4,14 +4,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Kohana::$charset; ?>" />
 	<title><?php echo $title; ?></title>
 
-	<?php foreach($css as $file => $media) echo HTML::style($base . $file, array('media' => $media)); ?>
+	<?php foreach($css as $file => $media) echo HTML::style($file, array('media' => $media)); ?>
 
-	<?php foreach($js as $file) echo HTML::script($base . $file); ?>
+	<?php foreach($js as $file) echo HTML::script($file); ?>
 </head>
 <body>
 	<div id="header">
 		<div class="box">
-			<h1>Console</h1>
+			<h1><a href="<?php echo Kohana::$base_url; ?>console">Console</a></h1>
 		</div>
 	</div>
 

@@ -34,7 +34,6 @@ class Console_Controller extends Kohana_Controller_Template
 					'console/media/js/jquery-1.3.2.min.js',
 					'console/media/js/console.js',
 				),
-				'base' => ltrim(Kohana::$base_url, '/'),
 			);
 
 			$this->template->set($view_data);

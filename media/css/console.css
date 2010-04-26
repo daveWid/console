@@ -31,6 +31,13 @@ a:hover {
 #header h1 {
 	margin-bottom: 0;
 }
+#header a{
+	text-decoration:none;
+	color:#FFF;
+}
+#header a:hover{
+	color:#39C;
+}
 
 .box {
 	margin:0 auto;
