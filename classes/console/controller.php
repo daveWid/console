@@ -17,8 +17,29 @@ class Console_Controller extends Kohana_Controller_Template
 	 */
 	public function before()
 	{
-		if( $this->request->action == 'media' ) $this->auto_render = FALSE;
-		parent::before();
+		if( $this->request->action == 'media' )
+		{
+			$this->auto_render = FALSE;
+		}
+		else
+		{
+			parent::before();
+
+			$view_data = array(
+				'css' => array(
+					'console/media/css/reset.css' => 'screen',
+					'console/media/css/console.css' => 'screen',
+				),
+				'js' => array(
+					'console/media/js/jquery-1.3.2.min.js',
+					'console/media/js/console.js',
+				),
+				'base' => rtrim(Kohana::$base_url, '/'),
+			);
+
+			$this->template->set($view_data);
+		}
+
 	}
 
 	/**
@@ -44,7 +65,7 @@ class Console_Controller extends Kohana_Controller_Template
 		if( $file )
 		{
 			$path = pathinfo($file);
-			$file = Kohana::find_file('logs', $path['dirname'] . '/' . $path['filename'], $path['extension'] );
+			$file = Kohana::find_file('logs', $path['dirname'] . DIRECTORY_SEPARATOR . $path['filename'], $path['extension'] );
 
 			if( $file )
 			{
@@ -109,9 +130,9 @@ class Console_Controller extends Kohana_Controller_Template
 
 					foreach( $files as $file => $path )
 					{
-						list( $logs, $year, $month, $fn ) = explode( '/', $file );
+						list( $logs, $year, $month, $fn ) = explode( DIRECTORY_SEPARATOR, $file );
 						$day = explode('.', $fn);
-						$dir[$year][$month][$day[0]] = str_replace('logs/', '', $file);
+						$dir[$year][$month][$day[0]] = str_replace('logs' . DIRECTORY_SEPARATOR, '', $file);
 					}
 
 				}
@@ -156,7 +177,7 @@ class Console_Controller extends Kohana_Controller_Template
 		// Find the file extension
 		$path = pathinfo($file);
 		// Array ( [dirname] => css [basename] => reset.css [extension] => css [filename] => reset )
-		$file = Kohana::find_file('media', $path['dirname'] . '/' . $path['filename'], $path['extension']);
+		$file = Kohana::find_file('media', $path['dirname'] . DIRECTORY_SEPARATOR . $path['filename'], $path['extension']);
 
 		if ($file)
 		{

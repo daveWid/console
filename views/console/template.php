@@ -4,11 +4,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Kohana::$charset; ?>" />
 	<title><?php echo $title; ?></title>
 
-	<link type="text/css" href="/console/media/css/reset.css" rel="stylesheet" media="screen" />
-	<link type="text/css" href="/console/media/css/console.css" rel="stylesheet" media="screen" />
+	<?php foreach($css as $file => $media) echo HTML::style($base . $file, array('media' => $media)); ?>
 
-	<script type="text/javascript" src="/console/media/js/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="/console/media/js/console.js"></script>
+	<?php foreach($js as $file) echo HTML::script($base . $file); ?>
 </head>
 <body>
 	<div id="header">
