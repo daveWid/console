@@ -3,11 +3,11 @@
  */
 $(document).ready( function(){
 	// Hide the directory tree
-	$('.directory .year').hide();
-	$('.directory .files').hide();
+	$('#directory .year').hide();
+	$('#directory .files').hide();
 
 	// Open up the active year/month
-	var active = $('.directory .files li.active');
+	var active = $('#directory .files li.active');
 
 	if( active ) {
 		$(active).parent('ul').show();
@@ -19,7 +19,7 @@ $(document).ready( function(){
 $(function(){
 
 	// Slide in years
-	$('.directory h2').click( function(){
+	$('#directory h2').click( function(){
 		// Show/hide the year
 		var year = $(this).next('.year');
 
@@ -30,7 +30,7 @@ $(function(){
 	} );
 
 	// Fade in files
-	$('.directory h3').click( function(){
+	$('#directory h3').click( function(){
 		// Get the list
 		var ul = $(this).siblings('ul');
 

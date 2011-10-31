@@ -1,40 +1,36 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Kohana::$charset; ?>" />
 	<title><?php echo $title; ?></title>
 
-	<?php foreach($css as $file => $media) echo HTML::style($file, array('media' => $media)); ?>
+	<?php foreach($css as $file => $media) echo HTML::style($file, array('media' => $media)), "\r\n"; ?>
 
-	<?php foreach($js as $file) echo HTML::script($file); ?>
+	<?php foreach($js as $file) echo HTML::script($file), "\r\n"; ?>
+
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
-	<div id="header">
-		<div class="box">
-			<h1><?php echo HTML::anchor(Route::get('console')->uri(array('file'=>NULL)), 'Console') ?></h1>
-		</div>
-	</div>
+	<header>
+		<h1><?php echo HTML::anchor(Route::get('console')->uri(array('file'=>NULL)), 'Console'); ?></h1>
+	</header>
 
 	<div id="page">
-		<div class="box" id="two-col">
+		<h1 class="half-bottom-margin"><?php echo $headline; ?></h1>
 
-			<h1><?php echo $headline; ?></h1>
-
-			<table cellspacing="0">
-				<tr>
-					<td id="content">
-						<?php echo $content; ?>
-					</td>
-					<td id="right">
-						<?php echo $right; ?>
-					</td>
-				</tr>
-				<tr id="footer">
-					<td class="left">Console: Developed by <a href="http://www.davewidmer.net">Dave Widmer</a></td>
-					<td class="right">Powered by <a href="http://www.kohanaphp.com">Kohana</a> v3.0</td>
-				</tr>
-			</table>
+		<aside id="sidebar">
+			<?php echo $right; ?>
+		</aside>
+		<div id="content">
+			<?php echo $content; ?>
 		</div>
 	</div>
+
+	<footer>
+		<div class="right">
+			Powered by <a href="http://www.kohanaphp.com">Kohana</a> v<?php echo Kohana::VERSION; ?>
+		</div>
+		Console: Developed by <a href="http://www.davewidmer.net">Dave Widmer</a>
+	</footer>
 </body>
 </html>

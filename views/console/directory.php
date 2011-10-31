@@ -1,6 +1,6 @@
 <?php $route = Route::get('console'); ?>
 
-<div class="directory">
+<div id="directory">
 <?php foreach($dir as $year => $months): ?>
 	<h2><?php echo $year; ?></h2>
 	<div class="year">
