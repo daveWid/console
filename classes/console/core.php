@@ -36,6 +36,44 @@ class Console_Core
 	}
 
 	/**
+	 * Parses the content of a log file.
+	 *
+	 * @param   string   The log file path
+	 * @return  View     The view for the parsed content
+	 */
+	public static function parse($file)
+	{
+		// Get the log file and remove the first 2 lines
+		$log = explode("\n", file_get_contents($file));
+		$log = array_slice($log, 2);
+
+		return View::factory('console/entry')->set('log', $log);
+	}
+
+	/**
+	 * Parses the passed in file into an array (or null if no file)
+	 *
+	 * @param   string   The file to parse
+	 * @return  mixed    An array with year, month, day properties or null
+	 */
+	public static function parse_file($file)
+	{
+		if ( ! $file)
+		{
+			return null;
+		}
+
+		$path = pathinfo($file);
+		list( $year, $month ) = explode( '/', $path['dirname'] );
+
+		return array(
+			'year' => $year,
+			'month' => $month,
+			'day' => $path['filename']
+		);
+	}
+
+	/**
 	 * Is the date that is being processed the active day?
 	 *
 	 * @param    array   The active day
@@ -51,7 +89,7 @@ class Console_Core
 			return false;
 		}
 
-		return ($active AND $year.'/'.$month === $active['dirname'] AND $day === $active['filename']);
+		return ($active['year'] == $year AND $active['month'] == $month AND $active['day'] == $day);
 	}
 
 }

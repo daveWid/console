@@ -3,17 +3,26 @@
  * Console Controller.
  * Use this to take a look at your logs instead of having to get on the server.
  *
- * @package		Console
- * @author		Dave Widmer
- * @copyright	2009 (c) Dave Widmer
+ * @package    Console
+ * @author     Dave Widmer <dave@davewidmer.net>
+ * @copyright  2009 - 2011 © Dave Widmer
  */
 class Console_Controller extends Kohana_Controller_Template
 {
-	// Sets the template variable
+	/**
+	 * @var   string   The path to the template view.
+	 */
 	public $template = 'console/template';
 
-	// Log directory
+	/**
+	 * @var   string   The name of the log directory to search
+	 */
 	private $dir = 'logs';
+
+	/**
+	 * @var   array|null   An array of year,month,day properties of the file to parse
+	 */
+	private $file = null;
 
 	/**
 	 * Checks for a media file
@@ -28,11 +37,12 @@ class Console_Controller extends Kohana_Controller_Template
 		{
 			parent::before();
 
+			$this->file = Console::parse_file($this->request->param('file'));
 			$this->dir = $this->request->param('dir');
 
 			$route = Route::get('console/media');
-			$view_data = array
-			(
+
+			$this->template->set(array(
 				'css' => array
 				(
 					$route->uri(array('file' => 'css/reset.css')) => 'screen',
@@ -43,11 +53,8 @@ class Console_Controller extends Kohana_Controller_Template
 					'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js',
 					$route->uri(array('file' => 'js/console.js')),
 				),
-			);
-
-			$this->template->set($view_data);
+			));
 		}
-
 	}
 
 	/**
@@ -55,11 +62,10 @@ class Console_Controller extends Kohana_Controller_Template
 	 */
 	public function action_index()
 	{
-		$file = $this->request->param('file');
 		$this->template->title = 'Console';
-		$this->template->headline = $this->headline( $file );
-		$this->template->content = $this->log( $file );
-		$this->template->right = $this->build_directory( $file );
+		$this->template->headline = $this->headline($this->file);
+		$this->template->content = $this->log($this->file);
+		$this->template->right = $this->build_directory($this->file);
 	}
 
 	/**
@@ -68,44 +74,20 @@ class Console_Controller extends Kohana_Controller_Template
 	 * @param	string	Log file path
 	 * @return	string
 	 */
-	protected function log( $file )
+	protected function log($file)
 	{
-		if( $file )
+		if($file)
 		{
-			$path = pathinfo($file);
-			$file = Kohana::find_file($this->dir, $path['dirname'] . DIRECTORY_SEPARATOR . $path['filename'], $path['extension'] );
+			$file = Kohana::find_file($this->dir, $file['year'].DIRECTORY_SEPARATOR.$file['month'].DIRECTORY_SEPARATOR.$file['day']);
 
-			if( $file )
-			{
-				$content = file_get_contents( $file );
-				return $this->parse( $content );
-			}
-			else
-			{
-				return Kohana::message( 'console', 'not_found' );
-			}
-
+			return ($file) ?
+				Console::parse($file)->render() :
+				Kohana::message('console', 'not_found');
 		}
 		else
 		{
-			return Kohana::message( 'console', 'directions');
+			return Kohana::message('console', 'directions');
 		}
-
-	}
-
-	/**
-	 * Parses the log file
-	 *
-	 * @param	string	Log Text
-	 * @return	string
-	 */
-	protected function parse( $text )
-	{
-		// Remove the first to lines
-		$log = explode( "\n", $text );
-		$log = array_slice( $log, 2 );
-
-		return  View::factory('console/entry')->set('log', $log)->render();
 	}
 
 	/**
@@ -122,9 +104,6 @@ class Console_Controller extends Kohana_Controller_Template
 		{
 			// Create directory array
 			$dir = array();
-
-			// Get the active file info
-			$active = ($file) ? pathinfo( $file ) : NULL;
 
 			krsort($logs);
 
@@ -147,7 +126,7 @@ class Console_Controller extends Kohana_Controller_Template
 
 			}
 
-			return View::factory('console/directory')->set('dir', $dir)->set('active', $active)->set('base', Kohana::$base_url)->render();
+			return View::factory('console/directory')->set('dir', $dir)->set('active', $this->file)->set('base', Kohana::$base_url)->render();
 		}
 
 	}
@@ -158,20 +137,11 @@ class Console_Controller extends Kohana_Controller_Template
 	 * @param	string	Filename
 	 * @return	string	Formatted Date
 	 */
-	protected function headline( $file )
+	protected function headline($file)
 	{
-		if( ! $file )
-		{
-			return 'Welcome to Console!';
-		}
-		else
-		{
-			$path = pathinfo($file);
-			list( $year, $month ) = explode( '/', $path['dirname'] );
-			$day = $path['filename'];
-
-			return sprintf( '%s %s, %s', Console::get_month($month), $day, $year );
-		}
+		return (! $file) ?
+			"Welcome to Console!" :
+			sprintf('%s %s, %s', Console::get_month($file['month']), $file['day'], $file['year']);
 	}
 
 	/**
