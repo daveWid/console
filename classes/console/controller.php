@@ -20,7 +20,7 @@ class Console_Controller extends Kohana_Controller_Template
 	 */
 	public function before()
 	{
-		if( $this->request->action == 'media' )
+		if ($this->request->action() === 'media')
 		{
 			$this->auto_render = FALSE;
 		}
@@ -30,14 +30,18 @@ class Console_Controller extends Kohana_Controller_Template
 
 			$this->dir = $this->request->param('dir');
 
-			$view_data = array(
-				'css' => array(
-					'console/media/css/reset.css' => 'screen',
-					'console/media/css/console.css' => 'screen',
+			$route = Route::get('console/media');
+			$view_data = array
+			(
+				'css' => array
+				(
+					$route->uri(array('file' => 'css/reset.css')) => 'screen',
+					$route->uri(array('file' => 'css/console.css')) => 'screen',
 				),
-				'js' => array(
-					'console/media/js/jquery-1.3.2.min.js',
-					'console/media/js/console.js',
+				'js' => array
+				(
+					'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js',
+					$route->uri(array('file' => 'js/console.js')),
 				),
 			);
 
@@ -110,7 +114,7 @@ class Console_Controller extends Kohana_Controller_Template
 	 * @param	string	Active file
 	 * @return	string
 	 */
-	protected function build_directory( $file )
+	protected function build_directory($file)
 	{
 		$logs = Kohana::list_files($this->dir);
 
@@ -186,7 +190,7 @@ class Console_Controller extends Kohana_Controller_Template
 		if ($file)
 		{
 			// Send the file content as the response
-			$this->request->response = file_get_contents($file);
+			$this->response->body(file_get_contents($file));
 		}
 		else
 		{
@@ -195,7 +199,7 @@ class Console_Controller extends Kohana_Controller_Template
 		}
 
 		// Set the content type for this extension
-		$this->request->headers['Content-Type'] = File::mime_by_ext($path['extension']);
+		$this->response->headers('Content-Type', File::mime_by_ext($path['extension']));
 	}
 
 }

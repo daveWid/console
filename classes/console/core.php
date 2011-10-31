@@ -35,4 +35,23 @@ class Console_Core
 		return $months[$month];
 	}
 
+	/**
+	 * Is the date that is being processed the active day?
+	 *
+	 * @param    array   The active day
+	 * @param    string   The year (4 digit)
+	 * @param    string   The month (2 digit)
+	 * @param    string   The day  (2 digit)
+	 * @return   boolean
+	 */
+	public static function is_active($active, $year, $month, $day)
+	{
+		if ($active === null)
+		{
+			return false;
+		}
+
+		return ($active AND $year.'/'.$month === $active['dirname'] AND $day === $active['filename']);
+	}
+
 }
