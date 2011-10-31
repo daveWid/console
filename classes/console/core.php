@@ -43,11 +43,45 @@ class Console_Core
 	 */
 	public static function parse($file)
 	{
-		// Get the log file and remove the first 2 lines
-		$log = explode("\n", file_get_contents($file));
-		$log = array_slice($log, 2);
+		$delimiter = "***";
+		$date = "/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/";
 
-		return View::factory('console/entry')->set('log', $log);
+		// Get the log file and remove the first 2 lines
+		$log = str_replace(Kohana::FILE_SECURITY." ?>".PHP_EOL.PHP_EOL, "", file_get_contents($file));
+		$log = preg_replace($date, "$delimiter\\0", $log);
+		$log = preg_split('/'.preg_quote($delimiter).'/', ltrim($log, $delimiter));
+
+		$parsed = array();
+		foreach ($log as $row)
+		{
+			// Get the date
+			preg_match($date, $row, $matches);
+			$data = array(
+				'date' => $matches[0],
+			);
+
+			$row = str_replace($data['date']." --- ", "", $row);
+
+			// Now the type
+			preg_match("/^\w+/", $row, $matches);
+			$data['type'] = strtolower($matches[0]);
+
+			// And check for a stack trace
+			if ($data['type'] === 'strace')
+			{
+				list($row, $trace) = explode("--".PHP_EOL, $row);
+				$data['stacktrace'] = explode(PHP_EOL, rtrim($trace, PHP_EOL));
+			}
+
+			$last_type = $data['type'];
+
+			// And set the message
+			$data['message'] = $row;
+
+			$parsed[] = $data;
+		}
+
+		return View::factory('console/entry')->set('log', $parsed);
 	}
 
 	/**

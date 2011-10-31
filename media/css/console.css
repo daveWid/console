@@ -501,18 +501,27 @@ footer a:hover{
 }
 
 /* Log styles */
-.log{
+#log{
 	border-top:1px solid #DDD;
+	padding-left:0;
+	list-style:none;
 }
 .entry {
 	padding:6px;
 	border-bottom: 1px solid #DDD;
 	word-wrap:break-word;
 }
-div.entry:hover {
+li.entry:hover {
 	background-color:#EEE;
 }
-div.entry.call-out {
+li.entry.error:hover{
+	background-color:#FEE;
+	color:#900;
+}
+li.entry.strace:hover{
+	background-color:#EBF5FA;
+}
+li.entry.call-out {
 	background-color:#eaf1ff;
 }
 
@@ -520,6 +529,7 @@ div.entry.call-out {
 #directory {
 	background-color: #EEE;
 	padding:10px 10px 10px 10px;
+	margin-bottom:1em;
 }
 #directory .year {
 	margin-bottom:20px;
@@ -569,4 +579,25 @@ div.entry.call-out {
 	background-color:#CCC;
 	color:#333;
 	font-weight: bold;
+}
+
+.stacktrace{
+	margin:0.5em;
+}
+.stacktrace h6{
+	margin-bottom:0;
+}
+
+.stacktrace ul{
+	border:1px dotted #AAA;
+	list-style:none;
+	padding-left:0;
+	margin:0;
+	background-color:#FFF;
+}
+.stacktrace ul li {
+	padding:0.25em;
+}
+.stacktrace ul li:nth-child(odd) {
+	background-color:#E5E5E5;
 }
