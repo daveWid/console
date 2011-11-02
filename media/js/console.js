@@ -1,7 +1,7 @@
 /**
  * Log viewer Javascript
  */
-$(document).ready( function(){
+$(document).ready(function(){
 	// Hide the directory tree
 	$('#directory .year').hide();
 	$('#directory .files').hide();
@@ -9,17 +9,11 @@ $(document).ready( function(){
 	// Open up the active year/month
 	var active = $('#directory .files li.active');
 
-	if( active ) {
+	if (active) {
 		$(active).parent('ul').show();
 		$(active).parents('.year').show();
 	}
-
-	// Activate the stace trace "tree"
-	$('.stacktrace').tree({
-		handle:"h6",
-		content:"ul"
-	});
-} );
+});
 
 $(function(){
 
