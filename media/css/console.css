@@ -511,18 +511,16 @@ footer a:hover{
 	border-bottom: 1px solid #DDD;
 	word-wrap:break-word;
 }
-li.entry:hover {
+li.entry .message{
+	padding:6px;
+	margin:-6px -6px 0;
+}
+li.entry .message:hover {
 	background-color:#EEE;
 }
-li.entry.error:hover{
+li.entry.error .message:hover{
 	background-color:#FEE;
 	color:#900;
-}
-li.entry.strace:hover{
-	background-color:#EBF5FA;
-}
-li.entry.call-out {
-	background-color:#eaf1ff;
 }
 
 /* Directory tree */
@@ -581,9 +579,6 @@ li.entry.call-out {
 	font-weight: bold;
 }
 
-.stacktrace{
-	margin:0.5em;
-}
 .stacktrace h6{
 	margin-bottom:0;
 }
@@ -594,10 +589,29 @@ li.entry.call-out {
 	padding-left:0;
 	margin:0;
 	background-color:#FFF;
+	font-size:0.9em;
 }
 .stacktrace ul li {
 	padding:0.25em;
+	color:#333;
 }
 .stacktrace ul li:nth-child(odd) {
 	background-color:#E5E5E5;
+}
+
+/* Stacktrace disclosure tree */
+.tree-collapsed{
+	display:none;
+}
+.tree-handle{
+	cursor:pointer;
+	margin:0;
+	padding:6px 0;
+}
+.tree-handle:before {
+	display:inline;
+	content: "[+] ";
+}
+.tree-handle.tree-expanded:before{
+	content: "[-] "
 }

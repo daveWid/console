@@ -14,6 +14,11 @@ $(document).ready( function(){
 		$(active).parents('.year').show();
 	}
 
+	// Activate the stace trace "tree"
+	$('.stacktrace').tree({
+		handle:"h6",
+		content:"ul"
+	});
 } );
 
 $(function(){
@@ -26,7 +31,6 @@ $(function(){
 		( $(year).is(':visible') ) ?
 			$(year).slideUp('normal') :
 			$(year).slideDown('normal') ;
-			$
 	} );
 
 	// Fade in files
@@ -41,12 +45,6 @@ $(function(){
 		else {
 			$(ul).slideDown('normal');
 		}
-	} );
-
-	// Hover click
-	$('.entry').click( function(){
-		// Entry
-		$(this).toggleClass('call-out');
 	} );
 
 });
