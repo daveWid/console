@@ -513,7 +513,7 @@ footer a:hover{
 }
 li.entry .message{
 	padding:6px;
-	margin:-6px -6px 0;
+	margin:-6px;
 }
 li.entry .message:hover {
 	background-color:#EEE;
@@ -577,41 +577,4 @@ li.entry.error .message:hover{
 	background-color:#CCC;
 	color:#333;
 	font-weight: bold;
-}
-
-.stacktrace h6{
-	margin-bottom:0;
-}
-
-.stacktrace ul{
-	border:1px dotted #AAA;
-	list-style:none;
-	padding-left:0;
-	margin:0;
-	background-color:#FFF;
-	font-size:0.9em;
-}
-.stacktrace ul li {
-	padding:0.25em;
-	color:#333;
-}
-.stacktrace ul li:nth-child(odd) {
-	background-color:#E5E5E5;
-}
-
-/* Stacktrace disclosure tree */
-.tree-collapsed{
-	display:none;
-}
-.tree-handle{
-	cursor:pointer;
-	margin:0;
-	padding:6px 0;
-}
-.tree-handle:before {
-	display:inline;
-	content: "[+] ";
-}
-.tree-handle.tree-expanded:before{
-	content: "[-] "
 }

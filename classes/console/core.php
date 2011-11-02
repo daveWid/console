@@ -56,28 +56,9 @@ class Console_Core
 		$log = preg_split('/'.preg_quote($delimiter).'/', ltrim($log, $delimiter));
 
 		$parsed = array();
-		for ($i = 0, $len = count($log); $i < $len; $i += 1)
+		foreach ($log as $row)
 		{
-			$row = $log[$i];
-			$data = self::split_entry($row);
-
-			// And check for an error (which will have a stack trace)
-			if ($data['type'] === 'error')
-			{
-				// Grab the next element in the array which contains the stack trace
-				$i += 1;
-				$strace = self::split_entry($log[$i]);
-
-				list($row, $trace) = explode("--".PHP_EOL, $strace['log']);
-				$data['stacktrace'] = explode(PHP_EOL, rtrim($trace, PHP_EOL));
-			}
-
-			$last_type = $data['type'];
-
-			// And set the message
-			$data['message'] = $data['log'];
-
-			$parsed[] = $data;
+			$parsed[] = self::split_entry($row);
 		}
 
 		return View::factory('console/entry')->set('log', $parsed);

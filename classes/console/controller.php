@@ -51,7 +51,6 @@ class Console_Controller extends Kohana_Controller_Template
 				'js' => array
 				(
 					'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js',
-					$route->uri(array('file' => 'js/jquery.tree.min.js')),
 					$route->uri(array('file' => 'js/console.js')),
 				),
 			));
