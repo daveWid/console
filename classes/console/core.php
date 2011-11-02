@@ -61,7 +61,7 @@ class Console_Core
 			$parsed[] = self::split_entry($row);
 		}
 
-		return View::factory('console/entry')->set('log', $parsed);
+		return View::factory('console/entry')->set('log', array_reverse($parsed));
 	}
 
 	/**
