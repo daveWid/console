@@ -10,6 +10,11 @@
 class Console_Core
 {
 	/**
+	 * @var   string   The regex to pull a date out of the log file
+	 */
+	public static $date_regex = "/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/";
+
+	/**
 	 * Gets the current month with the given number
 	 *
 	 * @param	string	Month
@@ -44,44 +49,63 @@ class Console_Core
 	public static function parse($file)
 	{
 		$delimiter = "***";
-		$date = "/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/";
 
 		// Get the log file and remove the first 2 lines
 		$log = str_replace(Kohana::FILE_SECURITY." ?>".PHP_EOL.PHP_EOL, "", file_get_contents($file));
-		$log = preg_replace($date, "$delimiter\\0", $log);
+		$log = preg_replace(self::$date_regex, "$delimiter\\0", $log);
 		$log = preg_split('/'.preg_quote($delimiter).'/', ltrim($log, $delimiter));
 
 		$parsed = array();
-		foreach ($log as $row)
+		for ($i = 0, $len = count($log); $i < $len; $i += 1)
 		{
-			// Get the date
-			preg_match($date, $row, $matches);
-			$data = array(
-				'date' => $matches[0],
-			);
+			$row = $log[$i];
+			$data = self::split_entry($row);
 
-			$row = str_replace($data['date']." --- ", "", $row);
-
-			// Now the type
-			preg_match("/^\w+/", $row, $matches);
-			$data['type'] = strtolower($matches[0]);
-
-			// And check for a stack trace
-			if ($data['type'] === 'strace')
+			// And check for an error (which will have a stack trace)
+			if ($data['type'] === 'error')
 			{
-				list($row, $trace) = explode("--".PHP_EOL, $row);
+				// Grab the next element in the array which contains the stack trace
+				$i += 1;
+				$strace = self::split_entry($log[$i]);
+
+				list($row, $trace) = explode("--".PHP_EOL, $strace['log']);
 				$data['stacktrace'] = explode(PHP_EOL, rtrim($trace, PHP_EOL));
 			}
 
 			$last_type = $data['type'];
 
 			// And set the message
-			$data['message'] = $row;
+			$data['message'] = $data['log'];
 
 			$parsed[] = $data;
 		}
 
 		return View::factory('console/entry')->set('log', $parsed);
+	}
+
+	/**
+	 * Takes a log entry and splits it into a manageable array.
+	 *
+	 * @param   string    The log entry
+	 * @return  array     Assoc array of (date =>, type =>, log => )
+	 */
+	public static function split_entry($row)
+	{
+		// Get the date
+		preg_match(self::$date_regex, $row, $matches);
+		$data = array(
+			'date' => $matches[0],
+		);
+
+		// Trim off the date and ---
+		$row = str_replace($data['date']." --- ", "", $row);
+
+		// Now get the type
+		preg_match("/^\w+/", $row, $matches);
+		$data['type'] = strtolower($matches[0]);
+		$data['log'] = $row;
+
+		return $data;
 	}
 
 	/**
