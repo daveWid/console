@@ -80,7 +80,7 @@ class Console_Core
 			$parsed[] = $data;
 		}
 
-		return View::factory('console/entry')->set('log', $parsed);
+		return View::factory('console/entry')->set('log', array_reverse($parsed));
 	}
 
 	/**
